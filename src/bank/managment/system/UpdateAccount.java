@@ -2,6 +2,7 @@ package bank.managment.system;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,15 +10,25 @@ import java.sql.ResultSet;
 
 public class UpdateAccount extends JFrame implements ActionListener {
     String cardno, facility;
-    JButton close,update;
+    JButton close,update,pinB;
     JLabel textName, textAcc, textCard, textPin,textExistAcc,textDate,labelFormNo;
     JCheckBox c1,c2,c3,c4,c5,c6;
+    JRadioButton r1,r2;
+    JTable table;
+    DefaultTableModel model;
     public UpdateAccount(String cardno) {
         super("ATM Management System by Ahona Rahman (SK-59)");
         this.cardno =cardno;
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/icon/icoon.png"));
         setIconImage(icon.getImage());
+
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/accnt.png"));
+        Image i2 = i1.getImage().getScaledInstance(100,110,Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel iimage = new JLabel(i3);
+        iimage.setBounds(120,10,100,100);
+        add(iimage);
 
         JLabel label1 = new JLabel("Account Information");
         label1.setBounds(250,20,600,40);
@@ -130,6 +141,31 @@ public class UpdateAccount extends JFrame implements ActionListener {
         labelExistAcc.setBounds(100,550,200,30);
         add(labelExistAcc);
 
+        r1 = new JRadioButton("Yes");
+        r1.setFont(new Font("Raleway", Font.BOLD,14));
+        r1.setBackground(new Color(227, 227, 163));
+        r1.setBounds(350,550,100,30);
+        add(r1);
+        r2 = new JRadioButton("No");
+        r2.setFont(new Font("Raleway", Font.BOLD,14));
+        r2.setBackground(new Color(227, 227, 163));
+        r2.setBounds(460,550,100,30);
+        add(r2);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(r1);
+        buttonGroup.add(r2);
+
+        // Create a table to display previous accounts
+        model = new DefaultTableModel();
+        model.addColumn("Account Number");
+        model.addColumn("Account Type");
+        model.addColumn("Create Date");
+
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(100, 600, 600, 100);
+        add(scrollPane);
         textExistAcc = new JLabel();
         textExistAcc.setFont(new Font("Raleway",Font.BOLD, 14));
         textExistAcc.setBounds(400,550,400,30);
@@ -157,6 +193,13 @@ public class UpdateAccount extends JFrame implements ActionListener {
                 textExistAcc.setText(resultSet.getString("prev_account"));
                 textDate.setText(resultSet.getString("signup_time"));
 
+                String existingAccountValue = resultSet.getString("prev_account");
+                if ("Yes".equals(existingAccountValue)) {
+                    r1.setSelected(true);
+                } else if ("No".equals(existingAccountValue)) {
+                    r2.setSelected(true);
+                }
+
                 facility = resultSet.getString("facility");
                 //System.out.println("Facility from database: " + facility);
                 String[] facilities = facility.split(","); // Assuming facilities are separated by a comma
@@ -182,39 +225,17 @@ public class UpdateAccount extends JFrame implements ActionListener {
                 String currentNID = resultSet.getString("NID");
 
                 // Fetch the account number and type of the existing account based on the current account's NID number
-                String queryExistingAccount = "SELECT s3.card_no, s3.account_type, s3.signup_time FROM signup3 s3 JOIN signup2 s2 ON s3.form_no= s2.form_no WHERE s2.NID = '" + currentNID + "'";
-                ResultSet resultSetExistingAccount = c.statement.executeQuery(queryExistingAccount);
+                String queryAllPreviousAccounts = "SELECT s3.card_no, s3.account_type, s3.signup_time FROM signup3 s3 JOIN signup2 s2 ON s3.form_no= s2.form_no WHERE s2.NID = '" + currentNID + "'";
+                ResultSet resultSetAllPreviousAccounts = c.statement.executeQuery(queryAllPreviousAccounts);
 
-                if (resultSetExistingAccount.next()) {
-                    JLabel labelExistingAccount = new JLabel("*Existing Account Number:");
-                    labelExistingAccount.setFont(new Font("Raleway", Font.BOLD, 18));
-                    labelExistingAccount.setBounds(100, 585, 300, 30);
-                    add(labelExistingAccount);
-
-                    JLabel textExistingAccount = new JLabel(resultSetExistingAccount.getString("card_no"));
-                    textExistingAccount.setFont(new Font("Raleway", Font.BOLD, 14));
-                    textExistingAccount.setBounds(400, 585, 400, 30);
-                    add(textExistingAccount);
-
-                    JLabel labelExistingAccountType = new JLabel("*Existing Account Type:");
-                    labelExistingAccountType.setFont(new Font("Raleway", Font.BOLD, 18));
-                    labelExistingAccountType.setBounds(100, 620, 300, 30);
-                    add(labelExistingAccountType);
-
-                    JLabel textExistingAccountType = new JLabel(resultSetExistingAccount.getString("account_type"));
-                    textExistingAccountType.setFont(new Font("Raleway", Font.BOLD, 14));
-                    textExistingAccountType.setBounds(400, 620, 400, 30);
-                    add(textExistingAccountType);
-
-                    JLabel labelExistingAccountDate = new JLabel("*Existing Account Create Date:");
-                    labelExistingAccountDate.setFont(new Font("Raleway", Font.BOLD, 18));
-                    labelExistingAccountDate.setBounds(100, 655, 300, 30);
-                    add(labelExistingAccountDate);
-
-                    JLabel textExistingAccountDate = new JLabel(resultSetExistingAccount.getString("signup_time"));
-                    textExistingAccountDate.setFont(new Font("Raleway", Font.BOLD, 14));
-                    textExistingAccountDate.setBounds(400, 655, 400, 30);
-                    add(textExistingAccountDate);
+                // Populate the table with previous accounts
+                while (resultSetAllPreviousAccounts.next()) {
+                    String[] rowData = {
+                            resultSetAllPreviousAccounts.getString("card_no"),
+                            resultSetAllPreviousAccounts.getString("account_type"),
+                            resultSetAllPreviousAccounts.getString("signup_time")
+                    };
+                    model.addRow(rowData);
                 }
             }
         } catch (Exception ex) {
@@ -227,6 +248,13 @@ public class UpdateAccount extends JFrame implements ActionListener {
         update.setBackground(Color.WHITE);
         update.setForeground(Color.BLACK);
         add(update);
+
+        pinB = new JButton("Change Pin?");
+        pinB.setBounds(550,205,120,25);
+        pinB.addActionListener(this);
+        pinB.setBackground(new Color(227, 227, 163));
+        pinB.setForeground(Color.BLACK);
+        add(pinB);
 
         close = new JButton("Exit");
         close.setBounds(690,720,100,25);
@@ -244,6 +272,9 @@ public class UpdateAccount extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        String existingAccountValue = r1.isSelected() ? "Yes" : "No";
+
         String fac = "";
         if(c1.isSelected()){
             fac += "ATM CARD,";
@@ -264,19 +295,27 @@ public class UpdateAccount extends JFrame implements ActionListener {
                 if (fac.equals("")){
                     JOptionPane.showMessageDialog(null,"Please select at-least one Services type");
                     return;
-                } if(fac.equals(facility)){
+                } if(fac.equals(facility) && existingAccountValue.equals(textExistAcc.getText())){
                     JOptionPane.showMessageDialog(null,"There is no new information here.");
                 } else {
                     Connection c1 = new Connection();
                     String q1 = "UPDATE signup3 SET facility = '" + fac + "' WHERE card_no = '" + cardno + "'";
                     int rowsUpdated1 = c1.statement.executeUpdate(q1);
-                    if (rowsUpdated1 > 0) {
+
+
+                    String q2 = "UPDATE signup2 SET prev_account = '" + existingAccountValue + "' WHERE form_no = (SELECT form_no FROM signup3 WHERE card_no = '" + cardno + "')";
+                    int rowsUpdated2 = c1.statement.executeUpdate(q2);
+
+                    if (rowsUpdated1 > 0 && rowsUpdated2 > 0) {
                         JOptionPane.showMessageDialog(null, "Account updated successfully");
                         setVisible(false);
                     } else {
                         JOptionPane.showMessageDialog(null, "Failed to update account");
                     }
                 }
+            } else if (e.getSource() == pinB) {
+                new Pin(cardno);
+                setVisible(false);
             } else if (e.getSource() == close) {
                 setVisible(false);
             }

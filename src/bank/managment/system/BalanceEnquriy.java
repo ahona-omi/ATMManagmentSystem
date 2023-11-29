@@ -12,7 +12,11 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
     JLabel label2;
     JButton b1;
     BalanceEnquriy(String cardno){
+        super("ATM Management System by Ahona Rahman (SK-59)");
         this.cardno =cardno;
+
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icon/icoon.png"));
+        setIconImage(icon.getImage());
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/atm2.png"));
         Image i2 = i1.getImage().getScaledInstance(1550,830,Image.SCALE_DEFAULT);
@@ -43,15 +47,10 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
         BigDecimal balance = BigDecimal.ZERO;
         try{
             Connection c = new Connection();
-            ResultSet resultSet = c.statement.executeQuery("Select * from bank where card_no = '"+cardno+"'");
-            while (resultSet.next()){
-                if (resultSet.getString("type").equals("Deposit")) {
-                    BigDecimal amount = resultSet.getBigDecimal("amount");
-                    balance = balance.add(amount);
-                } else {
-                    BigDecimal amount = resultSet.getBigDecimal("amount");
-                    balance = balance.subtract(amount);
-                }
+            String query = "SELECT SUM(CASE WHEN type = 'Deposit' THEN amount ELSE -amount END) AS balance FROM bank WHERE card_no = '" + cardno + "'";
+            ResultSet resultSet = c.statement.executeQuery(query);
+            if (resultSet.next()) {
+                balance = resultSet.getBigDecimal("balance");
             }
         } catch (Exception e){
             e.printStackTrace();

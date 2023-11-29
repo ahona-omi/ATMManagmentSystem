@@ -20,6 +20,13 @@ public class UpdateProfile extends JFrame implements ActionListener {
         ImageIcon icon = new ImageIcon(getClass().getResource("/icon/icoon.png"));
         setIconImage(icon.getImage());
 
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/man.png"));
+        Image i2 = i1.getImage().getScaledInstance(75,65,Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel iimage = new JLabel(i3);
+        iimage.setBounds(150,0,100,83);
+        add(iimage);
+
         JLabel label1 = new JLabel("Personal Information");
         label1.setBounds(250,20,600,40);
         label1.setFont(new Font("Raleway",Font.BOLD,36));

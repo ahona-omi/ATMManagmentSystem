@@ -45,21 +45,21 @@ public class main_Class extends JFrame implements ActionListener {
         b3 = new JButton("PIN CHANGE");
         b3.setForeground(Color.BLACK);
         b3.setBackground(new Color(32, 152, 152));
-        b3.setBounds(340,362,150,35);
+        b3.setBounds(340,409,150,35);
         b3.addActionListener(this);
         l3.add(b3);
 
         b8 = new JButton("UPDATE INFO");
         b8.setForeground(Color.BLACK);
         b8.setBackground(new Color(32, 152, 152));
-        b8.setBounds(340,409,150,35);
+        b8.setBounds(710,270,180,35);
         b8.addActionListener(this);
         l3.add(b8);
 
         b4 = new JButton("CASH WITHDRAWL");
         b4.setForeground(Color.BLACK);
         b4.setBackground(new Color(32, 152, 152));
-        b4.setBounds(710,270,180,35);
+        b4.setBounds(340,362,150,35);
         b4.addActionListener(this);
         l3.add(b4);
 

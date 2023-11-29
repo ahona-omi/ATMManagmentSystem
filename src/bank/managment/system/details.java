@@ -26,7 +26,7 @@ public class details extends JFrame implements ActionListener {
         setLayout(null);
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/trans.png"));
-        Image i2 = i1.getImage().getScaledInstance(120,183,Image.SCALE_DEFAULT);
+        Image i2 = i1.getImage().getScaledInstance(120,150,Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel iimage = new JLabel(i3);
         iimage.setBounds(420,150,120,183);
