@@ -194,7 +194,7 @@ public class Signup3 extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); // Current time
 
-        String atype = null;
+        String atype = "";
         if (r1.isSelected()){
             atype = "Saving Account";
         } else if (r2.isSelected()) {
@@ -234,6 +234,7 @@ public class Signup3 extends JFrame implements ActionListener {
                     return;
                 } if (atype.equals("")){
                     JOptionPane.showMessageDialog(null,"Please select Account type");
+                    return;
                 } if (fac.equals("")){
                     JOptionPane.showMessageDialog(null,"Please select at-least one Services type");
                 } else {

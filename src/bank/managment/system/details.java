@@ -115,7 +115,7 @@ public class details extends JFrame implements ActionListener {
 
             while (bankResultSet.next()) {
                 textArea.append(bankResultSet.getString("date") + "\t" +
-                        bankResultSet.getString("type") + "\t" +
+                        bankResultSet.getString("type") + "\t       " +
                         bankResultSet.getString("amount") + "\n\n");
                 if (bankResultSet.getString("type").equals("Deposit")) {
                     BigDecimal amnt = bankResultSet.getBigDecimal("amount");

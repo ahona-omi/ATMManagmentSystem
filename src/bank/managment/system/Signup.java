@@ -256,7 +256,12 @@ public class Signup extends JFrame implements ActionListener{
             String state = textState.getText();
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date birthDate = dateChooser.getDate();     // Get the birth-date from the date chooser
+            Date birthDate = dateChooser.getDate();     // Get the birthdate from the date chooser
+            if (birthDate == null) {
+                JOptionPane.showMessageDialog(null, "Please select a valid Date of Birth");
+                return;
+            }
+
             String currentDate = sdf.format(new Date());    // Get the current date
             String enteredDate = sdf.format(birthDate);
 
