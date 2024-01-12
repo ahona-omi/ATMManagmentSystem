@@ -262,14 +262,14 @@ public class Signup extends JFrame implements ActionListener{
                 return;
             }
 
-            String currentDate = sdf.format(new Date());    // Get the current date
-            String enteredDate = sdf.format(birthDate);
+//            String currentDate = sdf.format(new Date());    // Get the current date
+//            String enteredDate = sdf.format(birthDate);
 
             try{
-                Date date1 = sdf.parse(enteredDate);
-                Date date2 = sdf.parse(currentDate);
-                long diff = date2.getTime() - date1.getTime();
-                long age = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) / 365;
+//                Date date1 = sdf.parse(enteredDate);
+//                Date date2 = sdf.parse(currentDate);
+//                long diff = date2.getTime() - date1.getTime();
+                //long age = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) / 365;
 
                 if (textName.getText().equals("")){
                     JOptionPane.showMessageDialog(null, "Please fill your Name");
@@ -282,9 +282,6 @@ public class Signup extends JFrame implements ActionListener{
                     return;
                 } if (textEmail.getText().equals("")){
                     JOptionPane.showMessageDialog(null, "Please fill your Email address");
-                    return;
-                } if (age < 18) {
-                    JOptionPane.showMessageDialog(null, "You must be at least 18 years old to sign up.");
                 } else {
                     Connection c = new Connection();
                     String q = "insert into signup values('"+formno+"', '"+name+"','"+fname+"','"+gender+"','"+dob+"','"+phone+"','"+email+"','"+marital+"', '"+address+"', '"+city+"','"+pincode+"','"+state+"' )";

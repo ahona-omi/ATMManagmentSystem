@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class BalanceEnquriy extends JFrame implements ActionListener {
@@ -45,12 +46,24 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
         l3.add(b1);
 
         BigDecimal balance = BigDecimal.ZERO;
+//        try{
+//            Connection c = new Connection();
+//            String query = "SELECT SUM(CASE WHEN type = 'Deposit' THEN amount ELSE -amount END) AS balance FROM bank WHERE card_no = '" + cardno + "'";
+//            ResultSet resultSet = c.statement.executeQuery(query);
+//            if (resultSet.next()) {
+//                balance = resultSet.getBigDecimal("balance");
+//            }
         try{
             Connection c = new Connection();
-            String query = "SELECT SUM(CASE WHEN type = 'Deposit' THEN amount ELSE -amount END) AS balance FROM bank WHERE card_no = '" + cardno + "'";
-            ResultSet resultSet = c.statement.executeQuery(query);
-            if (resultSet.next()) {
-                balance = resultSet.getBigDecimal("balance");
+            String query = "SELECT calculateTotalBalance(?) AS balance";
+            try (PreparedStatement statement = c.con.prepareStatement(query)) {
+                statement.setString(1, cardno);
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        balance = resultSet.getBigDecimal("balance");
+                    }
+                }
             }
         } catch (Exception e){
             e.printStackTrace();
